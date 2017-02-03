@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello Vue</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container" id="app">
+        <h2>Top Harukaedu Developers</h2>
+
+        <h3>Total Vote : {{ clicks }}</h3>
+
+        <ul class="list-group">
+            <li v-for="developer in developers" class="list-group-item" v-on:click="developer.votes++">{{ developer.name }} <span class="badge">{{ developer.votes }}</span></li>
+        </ul>
+
+        <h4>Favorite Developers is {{ topDeveloper.name }}</h4>
+
+        <h2>Calculator</h2>
+
+        <h3>Result: <span v-show="a != 0 || b != 0">{{a}} {{operator}} {{b}} = {{c}}</span></h3>
+
+        <form class="form-inline" @submit.prevent="calculate">
+            <input type="number" v-model.number="a" class="form-control" @change="calculate">
+            <select v-model="operator" class="form-control" @change="calculate">
+                <option>+</option>
+                <option>-</option>
+                <option>*</option>
+                <option>/</option>
+            </select>
+            <input type="number" v-model.number="b" class="form-control" @change="calculate">
+        </form>
+
+        <br>
+        <pre>{{ $data }}</pre>
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.1/vue.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            developers: [{ name: 'Risal', votes: 0 }, { name: 'Rifa', votes: 0 }, { name: 'Iman', votes: 0 }, { name: 'Yusuf', votes: 0 }, { name: 'Farhan', votes: 0 }],
+            clicks: 0,
+
+            // calculator data
+            a: 0,
+            b: 0,
+            c: 0,
+            operator: '+'
+        },
+        computed: {
+            topDeveloper: function() {
+                var topDeveloper = this.developers.sort(function(a, b) {
+                    return b.votes - a.votes;
+                });
+
+                return topDeveloper[0];
+            }
+        },
+        methods: {
+            upvote: function() {
+                this.clicks++;
+            },
+
+            calculate: function(e) {
+                e.preventDefault();
+
+                switch(this.operator) {
+                    case '+':
+                        this.c = this.a + this.b
+                        break;
+                    case '-':
+                        this.c = this.a - this.b
+                        break;
+                    case '*':
+                        this.c = this.a * this.b
+                        break;
+                    case '/':
+                        this.c = this.a / this.b
+                        break;
+                }
+            }
+        }
+    })
+</script>
+</html>
