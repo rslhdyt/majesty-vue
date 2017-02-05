@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello Vue</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container" id="app">
+        <h2>Recipes</h2>
+
+        <h3>Total recipe : {{ recipes.length }}</h3>
+
+        <form class="form-inline">
+            <input type="text" v-model="query" class="form-control" placeholder="Seach recipes">
+        </form>
+
+        <br>
+        <ul class="list-group">
+            <li v-for="recipe in search" class="list-group-item">{{ recipe.name }} <span class="badge">{{ recipe.rating }}</span></li>
+        </ul>
+
+        <button class="btn btn-primary" @click="order = order * -1">Reverse order</button>
+        <br><br>
+        <ul class="list-group">
+            <li v-for="recipe in orderedRecipes" class="list-group-item">{{ recipe.name }} <span class="badge">{{ recipe.rating }}</span></li>
+        </ul>
+        
+        <h2>Foods Recipes</h2>
+        <ul class="list-group">
+            <li v-for="recipe in recipeTypeBy('food')" class="list-group-item">{{ recipe.name }}</li>
+        </ul>
+
+        <h2>Drinks Recipes</h2>
+        <ul class="list-group">
+            <li v-for="recipe in recipeTypeBy('drink')" class="list-group-item">{{ recipe.name }}</li>
+        </ul>
+
+        <h4>Top Recipe is {{ topRecipe.name }}</h4>
+
+        <br>
+        <pre>{{ $data }}</pre>
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.1/vue.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            query: '',
+            order: -1,
+            recipes: [
+                {name : 'Nasi Goreng Ayam', rating: 100, type: 'food'},
+                {name : 'Nasi Goreng Sapi', rating: 80, type: 'food'},
+                {name : 'Nasi Goreng Seafood', rating: 60, type: 'food'},
+                {name : 'Nasi Goreng Babi', rating: 10, type: 'food'},
+                {name : 'Jus Jambu', rating: 60, type: 'drink'},
+                {name : 'Jus Mangga', rating: 10, type: 'drink'},
+            ]
+        },
+        computed: {
+            orderedRecipes: function() {
+                var order = this.order;
+
+                return this.recipes.sort(function(a, b) {
+                    return (b.rating - a.rating) * order;
+                });
+            },
+            topRecipe: function() {
+                var topRecipe = this.recipes.sort(function(a, b) {
+                    return b.rating - a.rating;
+                });
+
+                return topRecipe[0];
+            },
+            search: function() {
+                var query = this.query;
+
+                return this.recipes.filter(function(recipe) {
+                    return recipe.name.includes(query);
+                });
+            }
+        },
+        methods: {
+            recipeTypeBy: function(type) {
+                return this.recipes.filter(function(recipe) {
+                    return recipe.type === type;
+                });
+            }
+        }
+    })
+</script>
+</html>
