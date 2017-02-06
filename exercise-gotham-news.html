@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello Vue</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <style type="text/css">
+        #app {
+            margin-top: 20px;
+        }
+
+        .page-title {
+            text-align: center;
+        }
+        .newses h4 {
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .newses .media-center {
+            margin-bottom: 10px;
+        }
+        .newses .media-body p {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="page-title">Gotham News</h1>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-md-offset-9">
+                <input type="text" class="form-control" v-model="query" placeholder="Search...">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <h3>Latest News</h3>
+
+                <div class="media newses" v-for="news in searchNews">
+                    <div class="media-center">
+                        <a href="#">
+                            <img class="media-object img-responsive" v-bind:src="news.image" alt="news">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">{{ news.title }}</h4>
+                        <span>Created at : {{ news.date }}</span>
+                        <p>{{ news.content }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h3>People of Gotham</h3>
+                <div class="media" v-for="people in searchPeoples">
+                    <div class="media-body">
+                        <h4 class="media-heading">{{ people.name }}</h4>
+                        <p>{{ people.description }}</p>
+                    </div>
+                    <div class="media-right">
+                        <a href="#">
+                            <img class="media-object" v-bind:src="people.image" alt="people">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <hr>
+                <p>Gotham city news &copy;</p>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.1/vue.js"></script>
+<script scr="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            query: '',
+            newses: [
+                {title: 'Joker Die', content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', date: '10022017', topic: 'people', image: 'http://lorempixel.com/people/800/200'},
+                {title: 'Bruce Wayne Vacation in Malibu', content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', date: '10022017', topic: 'sport', image: 'http://lorempixel.com/sport/800/200'},
+                {title: 'Inspector Gordon is Retired', content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', date: '10022017', topic: 'people', image: 'http://lorempixel.com/people/800/200'},
+                {title: 'Gotham people is celebrating Joker death', content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', date: '10022017', topic: 'nature', image: 'http://lorempixel.com/nature/800/200'},
+            ],
+            peoples: [
+                {name: 'Joker', image: 'http://lorempixel.com/people/90/90', description: 'The Joker is a fictional supervillain created by Bill Finger, Bob Kane, and Jerry Robinson who first appeared in the debut issue of the comic book Batman'},
+                {name: 'Bruce Wayne', image: 'http://lorempixel.com/people/90/90', description: 'Bruce Wayne swore an oath to rid the city of the evil that had taken his parents\' lives. He spent his youth traveling the world, training himself to intellectual'},
+                {name: 'Inspector Gordon', image: 'http://lorempixel.com/people/90/90', description: 'Real name: James Worthington Gordon, Sr. Aliases: Jim Gordon Sergeant Gordon Lt. Gordon Commissioner Gordon Gordon'},
+                {name: 'Miranda', image: 'http://lorempixel.com/people/90/90', description: 'Real name: James Worthington Gordon, Sr. Aliases: Jim Gordon Sergeant Gordon Lt. Gordon Commissioner Gordon Gordon'},
+                {name: 'Bane', image: 'http://lorempixel.com/people/90/90', description: 'Real name: James Worthington Gordon, Sr. Aliases: Jim Gordon Sergeant Gordon Lt. Gordon Commissioner Gordon Gordon'},
+                {name: 'Ras A Ghul', image: 'http://lorempixel.com/people/90/90', description: 'Real name: James Worthington Gordon, Sr. Aliases: Jim Gordon Sergeant Gordon Lt. Gordon Commissioner Gordon Gordon'},
+                {name: 'Batman', image: 'http://lorempixel.com/people/90/90', description: 'Real name: James Worthington Gordon, Sr. Aliases: Jim Gordon Sergeant Gordon Lt. Gordon Commissioner Gordon Gordon'},
+            ],
+        },
+        computed: {
+            searchNews: function() {
+                var query = this.query;
+
+                return this.newses.filter(function(news) {
+                    return news.title.toLowerCase().includes(query.toLowerCase());
+                })
+            },
+            searchPeoples: function() {
+                var query = this.query;
+
+                return this.peoples.filter(function(people) {
+                    return people.name.toLowerCase().includes(query.toLowerCase());
+                })
+            },
+        }
+    })
+</script>
+</html>
