@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello Vue</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <style type="text/css">
+        #app {
+            margin-top: 20px;
+        }
+        .thumbnail .glyphicon {
+            position: absolute;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+        <div class="row">
+            <team :team="team" :favorite="favorite" class="col-md-4" v-for="team in teams"></team>
+        </div>
+
+        <pre>{{ $data }}</pre>
+    </div>
+
+    <template id="team-template">
+        <div>
+            <div class="thumbnail">
+                <span v-show="isFavorite" class="glyphicon glyphicon-star pull-right" aria-hidden="true"></span>
+                <img v-bind:src="team.image" alt="team">
+                <div class="caption">
+                    <h3>{{ team.name }}</h3>
+                    <p>Vote : {{ team.vote }}</p>
+                    <p>
+                        <button class="btn btn-primary" @click="upvote" v-show="team.vote == 0">Vote</button>
+                        <button class="btn btn-warning" @click="setFavorite" v-show="!isFavorite">Favorite</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </template>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.1/vue.js"></script>
+<script>
+    Vue.component('team', {
+        props: ['team', 'favorite'],
+        template: '#team-template',
+        methods: {
+            upvote: function() {
+                this.team.vote += 1;
+            },
+            setFavorite: function() {
+                this.favorite = this.team;
+            }
+        },
+        computed: {
+            isFavorite: function() {
+                return this.team == this.favorite;
+            }   
+        }
+    });
+
+    new Vue({
+        el: '#app',
+        data: {
+            teams: [
+                { name: 'Risal', image: 'http://lorempixel.com/people/242/200', vote: 0 }, 
+                { name: 'Rifa', image: 'http://lorempixel.com/people/242/200', vote: 0 }, 
+                { name: 'Iman', image: 'http://lorempixel.com/people/242/200', vote: 0 }, 
+                { name: 'Yusuf', image: 'http://lorempixel.com/people/242/200', vote: 0 }, 
+                { name: 'Farhan', image: 'http://lorempixel.com/people/242/200', vote: 0 }
+            ],
+            favorite: {}
+        },
+        computed: {
+            
+        },
+        methods: {
+            
+        }
+    })
+</script>
+</html>

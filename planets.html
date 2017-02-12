@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Planets</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <style type="text/css">
+        #app {
+            margin-top: 20px;
+        }
+        .thumbnail .glyphicon {
+            position: absolute;
+            margin: 10px;
+        }
+        .reset-trip {
+            margin-bottom: 10px;
+        }
+        .stop-trip {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Fuel</h2>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" v-bind:style="{ width: remainingFuel + '%' }">
+                        <span class="sr-only">60% Complete</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-danger reset-trip" @click="reset">Reset Trip</button>
+                <button class="btn btn-warning stop-trip" @click="stop">Stop Trip</button>
+            </div>
+        </div>
+        <div class="row">
+            <planet :planet="planet" :used-fuel="usedFuel" class="col-md-2" v-for="planet in planets"></planet>
+        </div>
+
+        <pre>{{ $data }}</pre>
+    </div>
+
+    <template id="planet-template">
+        <div>
+            <div class="thumbnail">
+                <span v-show="planet.visited != 0" class="glyphicon glyphicon-plane" aria-hidden="true"></span>
+                <img v-bind:src="planet.image" alt="planet">
+                <div class="caption">
+                    <h3>{{ planet.name }}</h3>
+                    <p>Visited : {{ planet.visited }}</p>
+                    <p>
+                        <button class="btn btn-primary" @click="visit" v-show="usedFuel < 3 && !planet.visiting">Visit</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </template>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.1/vue.js"></script>
+<script>
+    var bus = new Vue();
+
+    Vue.component('planet', {
+        props: ['planet', 'usedFuel'],
+        template: '#planet-template',
+        methods: {
+            visit: function() {
+                this.planet.visited += 1;
+                this.planet.visiting = (this.planet.visiting) ? false : true;
+                bus.$emit('visited', this.planet.name);
+            },
+            reset: function() {
+                this.planet.visited = 0;
+                this.planet.visiting = false;
+            }
+        },
+        created: function() {
+            bus.$on('reset', this.reset);
+        }
+    });
+
+    new Vue({
+        el: '#app',
+        data: {
+            planets: [
+                { name: 'namex', image: 'http://lorempixel.com/people/242/200', visited: 0, visiting: false }, 
+                { name: 'earth', image: 'http://lorempixel.com/people/242/200', visited: 0, visiting: false }, 
+                { name: 'pluto', image: 'http://lorempixel.com/people/242/200', visited: 0, visiting: false }, 
+                { name: 'yupiter', image: 'http://lorempixel.com/people/242/200', visited: 0, visiting: false }, 
+                { name: 'mars', image: 'http://lorempixel.com/people/242/200', visited: 0, visiting: false },
+                { name: 'kardon', image: 'http://lorempixel.com/people/242/200', visited: 0, visiting: false },
+                { name: 'klingon', image: 'http://lorempixel.com/people/242/200', visited: 0, visiting: false },
+                { name: 'nibiru', image: 'http://lorempixel.com/people/242/200', visited: 0, visiting: false }
+            ],
+            usedFuel: 0,
+            fuel: 3,
+            currentPlanet: {},
+            log: []
+        },
+        computed: {
+            remainingFuel: function() {
+                return (100 / this.fuel) * (this.fuel - this.usedFuel);
+            }
+        },
+        methods: {
+            visited : function(planet) {
+                this.usedFuel += 1;
+                this.log.push(planet + ' visited');
+            },
+            reset: function() {
+                this.usedFuel = 0;
+                this.log = [];
+
+                bus.$emit('reset');
+            },
+            stop: function() {
+                bus.$off(['visited']);
+            }
+        },
+        created: function() {
+            bus.$on('visited', this.visited);
+        }
+    })
+</script>
+</html>
